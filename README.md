@@ -25,6 +25,7 @@
 ## Description
 
 Plantilla proyecto NestJs con modulo de Auth
+Typescript, passport, jwt, swagger, Sequelize. 
 
 ## Installation
 
