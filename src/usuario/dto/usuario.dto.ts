@@ -11,7 +11,5 @@ export class UsuarioDTO{
     @IsString()
     readonly email: string;
     @ApiProperty()
-    @IsNotEmpty()
-    @IsString()
     readonly password: string;
 }

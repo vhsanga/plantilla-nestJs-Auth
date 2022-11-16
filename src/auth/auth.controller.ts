@@ -16,7 +16,10 @@ export class AuthController {
 
     @UseGuards(DoesUserExist)
     @Post('signup')
-    async signUp(@Body() user: UsuarioDTO) {
-        return await this.authService.create(user);
+    async signUp(@Body() user: UsuarioDTO, @Request() req) {
+        //const contextUrl = req.headers['x-forwarded-proto']+'://'+req.hostname+req.url;
+        var contextUrl = req.get('origin');
+        console.log(req.hostname);
+        return await this.authService.create(user, contextUrl);
     }
 }

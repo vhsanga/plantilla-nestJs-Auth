@@ -10,7 +10,9 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1');
   app.useGlobalFilters(new AllExceptionFilter());
   app.useGlobalInterceptors(new TimeOutInterceptor());
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe());7
+  
+  app.enableCors();
 
   const options = new DocumentBuilder()
     .setTitle('SuperFlight API')

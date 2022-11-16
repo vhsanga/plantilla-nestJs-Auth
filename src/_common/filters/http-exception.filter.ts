@@ -21,9 +21,21 @@ import {
           ? exception.getStatus()
           : HttpStatus.INTERNAL_SERVER_ERROR;
   
-      const msg =
-        exception instanceof HttpException ? exception.getResponse() : exception;
+      var  msg =
+        exception instanceof HttpException ? exception.getResponse() : exception.toString();
       console.log(msg);
+      //msg = exception.toString();
+
+      if( exception instanceof HttpException ){
+        msg = exception.getResponse();
+      }else{
+        msg = {
+          "statusCode": 500,
+          "message": [exception.toString()],
+          "error": "Internal Server Error"
+          }
+      }
+
       this.logger.error(`Status ${status} Error: ${JSON.stringify(msg)}`);
   
       response.status(status).json({

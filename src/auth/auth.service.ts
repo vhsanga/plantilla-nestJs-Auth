@@ -3,12 +3,15 @@ import { UsuarioService } from 'src/usuario/usuario.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { v4 as uuid } from 'uuid';
+import { MailService } from 'src/_mail/_mail.service';
+var randomstring = require("randomstring");
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly userService: UsuarioService,
         private readonly jwtService: JwtService,
+        private mailService: MailService,
     ) { }
 
     async validateUser(username: string, pass: string) {
@@ -40,7 +43,24 @@ export class AuthService {
         return { user, token };
     }
 
-    public async create(user) {
+    public async create(user, contextUrl) {
+
+        const claveTemporal= randomstring.generate(4);
+        const pass = await this.hashPassword(claveTemporal);
+        // create the user
+        const newUser = await this.userService.create({ id:uuid(),  ...user, password:pass });
+
+        // tslint:disable-next-line: no-string-literal
+        const { password, ...result } = newUser['dataValues'];
+        contextUrl =contextUrl+"/login";
+        await this.mailService.sendUserConfirmation(user, claveTemporal, contextUrl);
+
+        // return the user and the token
+        return { /*user: result,*/  msg:  `Se ha enviado las credenciales temporales al correo  ${user.email} para que pueda completar su registro.`};
+    }
+
+
+    public async confirmateCreate(user) {
         // hash the password
         const pass = await this.hashPassword(user.password);
 
